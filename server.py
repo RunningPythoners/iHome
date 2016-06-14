@@ -9,6 +9,7 @@ import config
 
 from tornado.options import options, define
 from urls import urls
+from utils import session
 
 define("port", default=8000, help="run on the given port", type=int)
 
@@ -17,6 +18,7 @@ class Application(tornado.web.Application):
         mongoClient = pymongo.MongoClient(config.mongodb_options['host'], config.mongodb_options['port'])
         self.db = mongoClient[config.mongodb_options['db']]
         settings = config.settings
+        self.session_manager = session.SessionManager(config.session_secret, config.redis_options, config.session_timeout)
         tornado.web.Application.__init__(self, urls, **settings)
 
 
