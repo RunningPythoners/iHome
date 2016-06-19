@@ -1,10 +1,12 @@
 # coding:utf-8
 
-from Handler.BaseHandler import *
+from handlers.BaseHandler import *
 
 urls = [
     (r'^/$', IndexHandler),
     (r'^/register$', RegisterHandler),
     (r'^/login$', LoginHandler),
-    (r'^/(.*)$', IndexHandler),
+    (r'^/profile$', ProfileHandler),
+    (r'^/orders$', OrdersHandler),
+    (r'^/.*$', IndexHandler),
 ]

@@ -14,11 +14,10 @@ redis_options = {
 }
 
 settings = {
-    'template_path': os.path.join(os.path.dirname(__file__), 'Templates'),
+    'template_path': os.path.join(os.path.dirname(__file__), 'templates'),
     'static_path': os.path.join(os.path.dirname(__file__), 'statics'),
-    #'cookie_secret': 'oVbPIAblSsK4oYyMtwcyJI//tx2Kmk+mp+u/fJ0JDGw=',
     'cookie_secret':'0Q1AKOKTQHqaa+N80XhYW7KCGskOUE2snCW06UIxXgI=',
-    #'xsrf_cookies':True,
+    'xsrf_cookies':True,
     'login_url':'/login',
     'debug':True,
 }
@@ -26,3 +25,5 @@ settings = {
 passwd_hash_key = "ihome@$^*"
 session_secret = "PgzRjediR/Op8jVyhElZ3Gp/aoUrmEQ9jw7KdBEEuIY="
 session_timeout = 86400
+
+log_path = os.path.join(os.path.dirname(__file__), 'logs/log')
