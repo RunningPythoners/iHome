@@ -24,6 +24,7 @@ class Application(tornado.web.Application):
 
 if __name__ == '__main__':
     options.log_file_prefix = config.log_path
+    options.logging = 'debug'
     tornado.options.parse_command_line()
     app = Application()
     httpServer = tornado.httpserver.HTTPServer(app)
