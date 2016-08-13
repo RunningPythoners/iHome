@@ -4,7 +4,9 @@ import os
 mongodb_options = {
     'host':'127.0.0.1',
     'port':27017,
-    'db':'test_database'
+    'db':'test_database',
+    'user':'kdh',
+    'pwd':'root'
 }
 
 redis_options = {
