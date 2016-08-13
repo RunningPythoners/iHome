@@ -16,6 +16,7 @@ define("port", default=8000, help="run on the given port", type=int)
 class Application(tornado.web.Application):
     def __init__(self):
         mongoClient = pymongo.MongoClient(config.mongodb_options['host'], config.mongodb_options['port'])
+        mongoClient['admin'].authenticate(config.mongodb_options['user'], config.mongodb_options['pwd'])
         self.db = mongoClient[config.mongodb_options['db']]
         settings = config.settings
         self.session_manager = session.SessionManager(config.session_secret, config.redis_options, config.session_timeout)

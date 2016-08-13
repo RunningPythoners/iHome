@@ -10,20 +10,39 @@ from tornado import gen
 from tornado.websocket import WebSocketHandler
 import logging
 import requests
-from tornado.httpclient import AsyncHTTPClient
+from tornado.httpclient import AsyncHTTPClient, HTTPRequest
+import json
+import pingpp
 
 class IndexHandler(RequestHandler):
 
     def get(self):
         logging.error('file:%s,  this is error' % __file__)
         logging.info('this is info')
-        logging.debug('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        logging.debug('aaaaaaaaaaaaaaaaa')
         logging.warning('this is warning')
         logging.debug('this is warning')
-        self.render("index_base.html", is_login=False)
+        # self.set_cookie("test_name","test_value")
+        self.add_header("Set-Cookie","test_name1=test_value1; Path=/")
+        self.render("index.html", is_login=False)
 
     def post(self):
         self.render("index.html")
+
+class SearchHandler(RequestHandler):
+
+    @gen.coroutine
+    def get(self):
+        keyword = self.get_argument('keyword')
+        # 参数过滤遗留
+        client = AsyncHTTPClient()
+        url = "http://127.0.0.1:9200/test_database/houses/_search"
+        data = '{"query":{"match":{"city":"%s"}}}' % keyword
+        # 记得引入HTTPRequest
+        req = HTTPRequest(url, method="GET", body=data,allow_nonstandard_methods=True)
+        ret = yield client.fetch(req)
+        self.finish(ret.body)
+
 
 class LoginHandler(RequestHandler):
     def get(self):
@@ -58,6 +77,14 @@ class RegisterHandler(RequestHandler):
         self.render("register.html", error_msg="注册")
 
     def post(self):
+        # req = self.request.body
+        # logging.debug(req)
+        # try:
+        #     r = json.loads(req)
+        # except Exception as e:
+        #     logging.error(e)
+        #     self.write('error')
+        #     return
         name = self.get_argument('name')
         mobile = self.get_argument('mobile')
         passwd = self.get_argument('passwd1')
@@ -92,12 +119,13 @@ class RegisterHandler(RequestHandler):
         self.redirect("/") 
 
 
-class SyncHandler(RegisterHandler):
+class SyncHandler(RequestHandler):
     def get(self):
         os.system('ping -c 1 www.baidu.com')        
         self.finish('finished')
 
-class AsyncHandler(RegisterHandler):
+
+class AsyncHandler(RequestHandler):
     @gen.coroutine
     def get(self):
         ret = yield gen.Task(lambda x:os.system('ping -c 1 www.baidu.com'))
@@ -109,6 +137,7 @@ class AsyncHandler(RegisterHandler):
     def task(self):
         os.system('ping -c 1 www.baidu.com')
         return 'task finished'
+
 
 # class LoginNotifyHandler(WebSocketHandler):
 #     users = set()
@@ -185,3 +214,35 @@ class EnterProfilePageNotifyHandler(WebSocketHandler):
         for user in cls.users:
             user.write_message(message)
             logging.error(message)
+
+class OrderHandler(RequestHandler):
+    """下单接口"""
+    def post(self):
+        order_id = self.get_argument('order_id')
+        subject = self.get_argument('subject')
+        body = self.get_argument('body')
+        amount = self.get_argument('amount')
+        channel = self.get_argument('channel')
+        client_ip = self.request.remote_ip
+        # 参数校验
+        # 订单数据存放到数据库中
+        try:
+            pingpp.api_key = 'sk_test_GaLOiLivXXXTr9Wbn5eXj1yH'
+            charge = pingpp.Charge.create(
+                order_no=order_id,
+                amount=float(amount)*100, #订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
+                app=dict(id='app_rfnvzTLS8yD09enD'),
+                channel=channel,
+                currency='cny',
+                client_ip=client_ip,
+                subject=subject,
+                body=body,
+                extra={
+                    "success_url":"http://"+ self.request.host +"/orders"
+                }
+            )
+        except Exception as e:
+            logging.error(e)
+            self.write('error')
+            return
+        self.write(charge)

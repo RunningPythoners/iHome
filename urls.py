@@ -1,6 +1,7 @@
 # coding:utf-8
 
 from handlers.BaseHandler import *
+from handlers.MailTool.sendmail import *
 
 urls = [
     (r'^/$', IndexHandler),
@@ -14,5 +15,8 @@ urls = [
     (r'^/house/(?P<hid1>.+)/(?P<hid2>.+)$', HouseHandler),
     (r'^/taobaoip/*$', TaobaoIPHandler),
     (r'^/asynctaobaoip/*$', AsyncTaobaoIPHandler),
+    (r'^/search*$', SearchHandler),
+    (r'^/sendmail*$', SendMailHandler),
+    (r'^/order*$', OrderHandler),
     (r'^/.*$', IndexHandler),
 ]
