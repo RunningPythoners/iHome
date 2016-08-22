@@ -18,6 +18,15 @@ body {
 .register-login {
     height: 50px;
     line-height: 50px;
+    display: none;
+}
+.user-info {
+    display: none;
+    color: #666;
+    height: 55px;
+    line-height: 55px;
+    font-size: 16px;
+    margin-right: 10px;
 }
 .top-btn, .top-btn:hover {
     width: 60px;
