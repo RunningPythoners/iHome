@@ -14,6 +14,7 @@ ihome_api_urls = [
     (r'^/api/smscode?', VerifyCode.SMSCodeHandler),
     (r'^/api/register$', Passport.RegisterHandler),
     (r'^/api/login$', Passport.LoginHandler),
+    (r'^/api/check-login$', Passport.CheckLoginHandler),
 ]
 
 mis_api_urls = [

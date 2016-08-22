@@ -1,8 +1,9 @@
 # coding:utf-8
 
-from tornado.web import RequestHandler
+from tornado.web import RequestHandler, authenticated
 from utils.data_base import DataBase
 from utils import session
+from handlers.BaseHandler import BaseHandler
 
 import hashlib
 import config
@@ -55,3 +56,12 @@ class LoginHandler(RequestHandler):
             return self.write({"errno":0, "errmsg":"OK"})
         else:
             return self.write({"errno":2, "errmsg":"手机号或密码错误！"})
+
+
+class CheckLoginHandler(BaseHandler):
+    """检查登陆状态"""
+    def get(self):
+        if self.get_current_user():
+            self.write({"errno":0, "errmsg":"true", "data":{"name":self.session.get("name")}})
+        else:
+            self.write({"errno":1, "errmsg":"false"})

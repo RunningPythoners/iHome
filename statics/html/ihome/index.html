@@ -3,7 +3,7 @@
 <head> 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>爱家</title>
     <link href="/static/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -21,6 +21,7 @@
                 <a class="btn top-btn btn-theme" href="/view/register.html">注册</a>
                 <a class="btn top-btn btn-theme" href="/view/login.html">登录</a>
             </div>
+            <div class="user-info fr"><span><i class="fa fa-user fa-lg"></i></span> <span class="user-name"></span></div>
         </div>
         <div class="swiper-container">
             <div class="swiper-wrapper">
@@ -127,7 +128,15 @@
             autoplayDisableOnInteraction: false,
             pagination: '.swiper-pagination',
             paginationClickable: true
-        })         
+        });         
+        $.get("/api/check-login", function(data) {
+            if (0 == data.errno) {
+                $(".top-bar>.user-info>.user-name").html(data.data.name);    
+                $(".top-bar>.user-info").show();
+            } else {
+                $(".top-bar>.register-login").show();
+            }
+        }, "json");
     </script>
 </body>
 </html>

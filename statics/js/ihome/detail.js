@@ -1,3 +1,3 @@
 function hrefBack() {
-    history.back();
+    history.go(-1);
 }

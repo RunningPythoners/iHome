@@ -1,5 +1,5 @@
 function hrefBack() {
-    history.back();
+    history.go(-1);
 }
 
 $(document).ready(function() {
