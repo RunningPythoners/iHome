@@ -30,7 +30,6 @@ print(info)
 file.close()
 # assert ret['key'] == key
 # assert ret['hash'] == etag(localfile)
-##test
 
 
 
